@@ -27,6 +27,10 @@ public class MemberService {
         return memberRepository.save(new Member(username, password, nickname));
     }
 
+    public Optional<Member> findById(int id) {
+        return memberRepository.findById(id);
+    }
+
     public Optional<Member> findByUsername(String username) {
         return memberRepository.findByUsername(username);
     }
