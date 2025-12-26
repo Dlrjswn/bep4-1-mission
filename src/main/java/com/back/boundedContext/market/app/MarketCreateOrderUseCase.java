@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +29,10 @@ public class MarketCreateOrderUseCase {
                 order
 
         );
+    }
+
+    public Optional<Order> findOrderById(int id){
+        return orderRepository.findById(id);
     }
 
 }
