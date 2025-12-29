@@ -62,11 +62,9 @@ public class ApiV1OrderController {
             throw new DomainException("400-5", "주문번호가 일치하지 않습니다.");
 
         tossPaymentsService.confirmCardPayment(
-                new TossPaymentsService.TossPaymentsConfirmRequest(
-                        reqBody.paymentKey(),
-                        reqBody.orderId(),
-                        reqBody.amount()
-                )
+                reqBody.paymentKey(),
+                reqBody.orderId(),
+                reqBody.amount()
         );
 
         marketFacade.requestPayment(order, reqBody.amount());

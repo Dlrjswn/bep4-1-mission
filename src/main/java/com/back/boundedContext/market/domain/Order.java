@@ -2,7 +2,7 @@ package com.back.boundedContext.market.domain;
 
 import com.back.global.jpa.entity.BaseIdAndTime;
 import com.back.shared.market.dto.OrderDto;
-import com.back.shared.market.event.MarketOrderRequestPaymentStartedEvent;
+import com.back.shared.market.event.MarketOrderPaymentRequestedEvent;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -25,26 +25,38 @@ import static jakarta.persistence.FetchType.LAZY;
 public class Order extends BaseIdAndTime {
     @ManyToOne(fetch = LAZY)
     private MarketMember buyer;
+    private LocalDateTime cancelDate;
     private LocalDateTime requestPaymentDate;
     private LocalDateTime paymentDate;
-    private LocalDateTime cancelDate;
-    private LocalDateTime refundDate;
-    private int price;
-    private int salePrice;
+    private long price;
+    private long salePrice;
 
     @OneToMany(mappedBy = "order", cascade = {PERSIST, REMOVE}, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
-    public Order(Cart cart){
-        this.buyer = cart.getCustomer();
+    public Order(Cart cart) {
+        this.buyer = cart.getBuyer();
 
         cart.getItems().forEach(item -> {
             addItem(item.getProduct());
         });
-
     }
 
-    public void addItem(Product product){
+    public OrderDto toDto() {
+        return new OrderDto(
+                getId(),
+                getCreateDate(),
+                getModifyDate(),
+                buyer.getId(),
+                buyer.getNickname(),
+                price,
+                salePrice,
+                requestPaymentDate,
+                paymentDate
+        );
+    }
+
+    public void addItem(Product product) {
         OrderItem orderItem = new OrderItem(
                 this,
                 product,
@@ -59,40 +71,34 @@ public class Order extends BaseIdAndTime {
         salePrice += product.getSalePrice();
     }
 
-    public void completePayment(){
+    public void completePayment() {
         paymentDate = LocalDateTime.now();
     }
 
-    public boolean isPaid(){
+    public boolean isPaid() {
         return paymentDate != null;
     }
 
-    public void requestPayment(long pgPaymentAmount){
-        markAsRequestPaymentStarted();
-
-        publishEvent(
-                new MarketOrderRequestPaymentStartedEvent(toDto(), pgPaymentAmount)
-        );
-    }
-
-    public void markAsRequestPaymentStarted(){
-        requestPaymentDate = LocalDateTime.now();
-    }
-
-    public void cancelRequestPayment(){
-        requestPaymentDate = null;
-    }
-
-    public boolean isCanceled(){
+    public boolean isCanceled() {
         return cancelDate != null;
     }
 
-    public boolean isPaymentInProgress(){
+    public boolean isPaymentInProgress() {
         return requestPaymentDate != null && paymentDate == null && cancelDate == null;
     }
 
-    public OrderDto toDto() {
-        return new OrderDto(getId(),getCreateDate(),getModifyDate(), buyer.getId(),buyer.getNickname(),price,salePrice,requestPaymentDate,paymentDate);
+    public void requestPayment(long pgPaymentAmount) {
+        requestPaymentDate = LocalDateTime.now();
+
+        publishEvent(
+                new MarketOrderPaymentRequestedEvent(
+                        toDto(),
+                        pgPaymentAmount
+                )
+        );
     }
 
+    public void cancelRequestPayment() {
+        requestPaymentDate = null;
+    }
 }

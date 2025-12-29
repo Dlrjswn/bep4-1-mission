@@ -1,9 +1,7 @@
 package com.back.boundedContext.post.domain;
 
 
-import com.back.boundedContext.member.domain.Member;
 import com.back.global.jpa.entity.BaseIdAndTime;
-import com.back.shared.post.dto.PostCommentDto;
 import com.back.shared.post.dto.PostDto;
 import com.back.shared.post.event.PostCommentCreatedEvent;
 import jakarta.persistence.*;
@@ -18,9 +16,9 @@ import static jakarta.persistence.CascadeType.REMOVE;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
+@Table(name = "POST_POST")
 @NoArgsConstructor
 @Getter
-@Table(name = "POST_POST")
 public class Post extends BaseIdAndTime {
     @ManyToOne(fetch = LAZY)
     private PostMember author;
@@ -36,6 +34,18 @@ public class Post extends BaseIdAndTime {
         this.content = content;
     }
 
+    public PostDto toDto() {
+        return new PostDto(
+                getId(),
+                getCreateDate(),
+                getModifyDate(),
+                author.getId(),
+                author.getNickname(),
+                title,
+                content
+        );
+    }
+
     public PostComment addComment(PostMember author, String content) {
         PostComment postComment = new PostComment(this, author, content);
 
@@ -48,9 +58,5 @@ public class Post extends BaseIdAndTime {
 
     public boolean hasComments() {
         return !comments.isEmpty();
-    }
-
-    public PostDto toDto() {
-        return new PostDto(getId(),getCreateDate(),getModifyDate(),author.getId(), author.getNickname(), title, content);
     }
 }

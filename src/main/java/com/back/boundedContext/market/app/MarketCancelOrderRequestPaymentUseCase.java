@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class MarketCancelOrderRequestPaymentUseCase {
     private final OrderRepository orderRepository;
 
-    public void cancelRequestPayment(int orderId){
+    public void cancelRequestPayment(int orderId) {
         Order order = orderRepository.findById(orderId).get();
 
         order.cancelRequestPayment();

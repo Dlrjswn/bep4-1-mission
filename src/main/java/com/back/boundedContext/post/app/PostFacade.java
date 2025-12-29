@@ -14,14 +14,13 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PostFacade {
-    private final PostSyncMemberUseCase postSyncMemberUseCase;
     private final PostSupport postSupport;
+    private final PostSyncMemberUseCase postSyncMemberUseCase;
     private final PostWriteUseCase postWriteUseCase;
 
-
-    @Transactional(readOnly = true)
-    public long count() {
-        return postSupport.count();
+    @Transactional
+    public PostMember syncMember(MemberDto member) {
+        return postSyncMemberUseCase.syncMember(member);
     }
 
     @Transactional
@@ -30,13 +29,13 @@ public class PostFacade {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Post> findById(int id) {
-        return postSupport.findById(id);
+    public long count() {
+        return postSupport.count();
     }
 
-    @Transactional
-    public PostMember syncMember(MemberDto member) {
-        return postSyncMemberUseCase.syncMember(member);
+    @Transactional(readOnly = true)
+    public Optional<Post> findById(int id) {
+        return postSupport.findById(id);
     }
 
     @Transactional(readOnly = true)
@@ -45,8 +44,7 @@ public class PostFacade {
     }
 
     @Transactional(readOnly = true)
-    public List<Post> findByOrderByIdDesc(){
+    public List<Post> findByOrderByIdDesc() {
         return postSupport.findByOrderByIdDesc();
     }
-
 }

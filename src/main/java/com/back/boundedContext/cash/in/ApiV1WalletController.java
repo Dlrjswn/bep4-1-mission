@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/cash/api/v1/wallets")
+@RequestMapping("/api/v1/cash/wallets")
 @RequiredArgsConstructor
 public class ApiV1WalletController {
     private final CashFacade cashFacade;

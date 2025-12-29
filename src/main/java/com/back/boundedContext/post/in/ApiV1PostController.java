@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("post/api/v1/posts")
+@RequestMapping("/api/v1/post/posts")
 @RequiredArgsConstructor
 public class ApiV1PostController {
     private final PostFacade postFacade;
@@ -21,7 +21,8 @@ public class ApiV1PostController {
     @GetMapping
     @Transactional(readOnly = true)
     public List<PostDto> getItems() {
-        return postFacade.findByOrderByIdDesc()
+        return postFacade
+                .findByOrderByIdDesc()
                 .stream()
                 .map(Post::toDto)
                 .toList();
@@ -29,7 +30,9 @@ public class ApiV1PostController {
 
     @GetMapping("/{id}")
     @Transactional(readOnly = true)
-    public PostDto getItem(@PathVariable int id) {
+    public PostDto getItem(
+            @PathVariable int id
+    ) {
         return postFacade
                 .findById(id)
                 .map(Post::toDto)

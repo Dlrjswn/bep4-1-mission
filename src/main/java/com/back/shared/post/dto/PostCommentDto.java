@@ -1,6 +1,5 @@
 package com.back.shared.post.dto;
 
-import com.back.boundedContext.post.domain.PostComment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,6 +15,4 @@ public class PostCommentDto {
     private final int authorId;
     private final String authorName;
     private final String content;
-
-
 }

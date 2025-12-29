@@ -12,7 +12,7 @@ import java.util.Optional;
 public class MemberSupport {
     private final MemberRepository memberRepository;
 
-    public long count(){
+    public long count() {
         return memberRepository.count();
     }
 

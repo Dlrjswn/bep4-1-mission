@@ -5,8 +5,6 @@ import com.back.boundedContext.market.domain.MarketMember;
 import com.back.boundedContext.market.domain.Order;
 import com.back.boundedContext.market.domain.Product;
 import com.back.global.rsData.RsData;
-import com.back.shared.cash.event.CashOrderPaymentFailedEvent;
-import com.back.shared.cash.event.CashOrderPaymentSucceededEvent;
 import com.back.shared.market.dto.MarketMemberDto;
 import com.back.shared.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
@@ -18,14 +16,13 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class MarketFacade {
+    private final MarketSupport marketSupport;
     private final MarketSyncMemberUseCase marketSyncMemberUseCase;
     private final MarketCreateProductUseCase marketCreateProductUseCase;
-    private final MarketSupport marketSupport;
     private final MarketCreateCartUseCase marketCreateCartUseCase;
     private final MarketCreateOrderUseCase marketCreateOrderUseCase;
     private final MarketCompleteOrderPaymentUseCase marketCompleteOrderPaymentUseCase;
     private final MarketCancelOrderRequestPaymentUseCase marketCancelOrderRequestPaymentUseCase;
-    ;
 
     @Transactional
     public MarketMember syncMember(MemberDto member) {
@@ -33,12 +30,8 @@ public class MarketFacade {
     }
 
     @Transactional(readOnly = true)
-    public long productsCount(){
+    public long productsCount() {
         return marketSupport.countProducts();
-    }
-    @Transactional(readOnly = true)
-    public Optional<MarketMember> findMemberByUsername(String username){
-        return marketSupport.findMemberByUsername(username);
     }
 
     @Transactional
@@ -48,29 +41,42 @@ public class MarketFacade {
             int sourceId,
             String name,
             String description,
-            int price,
-            int salePrice
-    ){
-        return marketCreateProductUseCase.saveProduct(seller, sourceTypeCode, sourceId, name, description, price, salePrice);
+            long price,
+            long salePrice
+    ) {
+        return marketCreateProductUseCase.createProduct(
+                seller,
+                sourceTypeCode,
+                sourceId,
+                name,
+                description,
+                price,
+                salePrice
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<MarketMember> findMemberByUsername(String username) {
+        return marketSupport.findMemberByUsername(username);
     }
 
     @Transactional
-    public RsData<Cart> createCart(MarketMemberDto customer){
-        return marketCreateCartUseCase.createCart(customer);
+    public RsData<Cart> createCart(MarketMemberDto buyer) {
+        return marketCreateCartUseCase.createCart(buyer);
     }
 
     @Transactional(readOnly = true)
-    public Optional<Cart> findCartByCustomer(MarketMember customer){
-        return marketSupport.findCartByCustomer(customer);
+    public Optional<Cart> findCartByBuyer(MarketMember buyer) {
+        return marketSupport.findCartByBuyer(buyer);
     }
 
     @Transactional(readOnly = true)
-    public Optional<Product> findProductById(int id){
+    public Optional<Product> findProductById(int id) {
         return marketSupport.findProductById(id);
     }
 
     @Transactional(readOnly = true)
-    public long ordersCount(){
+    public long ordersCount() {
         return marketSupport.countOrders();
     }
 
@@ -80,23 +86,22 @@ public class MarketFacade {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Order> findOrderById(int id){
-        return marketCreateOrderUseCase.findOrderById(id);
+    public Optional<Order> findOrderById(int id) {
+        return marketSupport.findOrderById(id);
     }
 
     @Transactional
-    public void requestPayment(Order order, long pgPaymentAmount){
+    public void requestPayment(Order order, long pgPaymentAmount) {
         order.requestPayment(pgPaymentAmount);
     }
 
     @Transactional
-    public void completeOrderPayment(int orderId){
+    public void completeOrderPayment(int orderId) {
         marketCompleteOrderPaymentUseCase.completePayment(orderId);
     }
 
     @Transactional
-    public void cancelOrderRequestPayment(int orderId){
+    public void cancelOrderRequestPayment(int orderId) {
         marketCancelOrderRequestPaymentUseCase.cancelRequestPayment(orderId);
     }
-
 }

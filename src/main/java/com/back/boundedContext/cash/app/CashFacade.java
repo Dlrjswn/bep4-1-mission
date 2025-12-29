@@ -4,7 +4,6 @@ import com.back.boundedContext.cash.domain.CashMember;
 import com.back.boundedContext.cash.domain.Wallet;
 import com.back.shared.cash.dto.CashMemberDto;
 import com.back.shared.market.dto.OrderDto;
-import com.back.shared.market.event.MarketOrderRequestPaymentStartedEvent;
 import com.back.shared.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,11 +17,11 @@ public class CashFacade {
     private final CashSupport cashSupport;
     private final CashSyncMemberUseCase cashSyncMemberUseCase;
     private final CashCreateWalletUseCase cashCreateWalletUseCase;
-    private final CashCompleteOrderPaymentUseCase cashOrderCompletePaymentUseCase;
+    private final CashCompleteOrderPaymentUseCase cashCompleteOrderPaymentUseCase;
 
     @Transactional
     public CashMember syncMember(MemberDto member) {
-        return cashSyncMemberUseCase.SyncMember(member);
+        return cashSyncMemberUseCase.syncMember(member);
     }
 
     @Transactional
@@ -40,14 +39,13 @@ public class CashFacade {
         return cashSupport.findWalletByHolder(holder);
     }
 
-
     @Transactional
     public void completeOrderPayment(OrderDto order, long pgPaymentAmount) {
-        cashOrderCompletePaymentUseCase.completeOrderPayment(order, pgPaymentAmount);
+        cashCompleteOrderPaymentUseCase.completeOrderPayment(order, pgPaymentAmount);
     }
 
-    @Transactional
-    public Optional<Wallet> findWalletByHolderId(int holderId){
+    @Transactional(readOnly = true)
+    public Optional<Wallet> findWalletByHolderId(int holderId) {
         return cashSupport.findWalletByHolderId(holderId);
     }
 }

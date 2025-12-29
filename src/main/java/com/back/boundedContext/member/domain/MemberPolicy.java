@@ -3,16 +3,16 @@ package com.back.boundedContext.member.domain;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
-
 
 @Service
 public class MemberPolicy {
     private static int PASSWORD_CHANGE_DAYS;
 
     @Value("${custom.member.password.changeDays}")
-    public static void setPasswordChangeDays(int days) {
+    public void setPasswordChangeDays(int days) {
         PASSWORD_CHANGE_DAYS = days;
     }
 

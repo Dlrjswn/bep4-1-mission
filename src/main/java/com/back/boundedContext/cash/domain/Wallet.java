@@ -32,7 +32,18 @@ public class Wallet extends BaseManualIdAndTime {
         this.holder = holder;
     }
 
-    public boolean hasBalance(){
+    public WalletDto toDto() {
+        return new WalletDto(
+                getId(),
+                getCreateDate(),
+                getModifyDate(),
+                holder.getId(),
+                holder.getUsername(),
+                balance
+        );
+    }
+
+    public boolean hasBalance() {
         return balance > 0;
     }
 
@@ -79,9 +90,4 @@ public class Wallet extends BaseManualIdAndTime {
 
         return cashLog;
     }
-
-    public WalletDto toDto() {
-        return new WalletDto(getId(),getCreateDate(),getModifyDate(),holder.getId(), holder.getUsername(),balance);
-    }
-
 }

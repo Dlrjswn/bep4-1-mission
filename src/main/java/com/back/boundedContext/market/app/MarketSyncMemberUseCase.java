@@ -2,9 +2,7 @@ package com.back.boundedContext.market.app;
 
 import com.back.boundedContext.market.domain.MarketMember;
 import com.back.boundedContext.market.out.MarketMemberRepository;
-import com.back.boundedContext.member.domain.Member;
 import com.back.global.eventPublisher.EventPublisher;
-import com.back.shared.market.dto.MarketMemberDto;
 import com.back.shared.market.event.MarketMemberCreatedEvent;
 import com.back.shared.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
@@ -17,25 +15,28 @@ public class MarketSyncMemberUseCase {
     private final EventPublisher eventPublisher;
 
     public MarketMember syncMember(MemberDto member) {
-
         boolean isNew = !marketMemberRepository.existsById(member.getId());
 
-        MarketMember marketMember = marketMemberRepository.save(new MarketMember(
-                member.getId(),
-                member.getCreateDate(),
-                member.getModifyDate(),
-                member.getUsername(),
-                "",
-                member.getNickname(),
-                member.getActivityScore()
-                ));
+        MarketMember _member = marketMemberRepository.save(
+                new MarketMember(
+                        member.getId(),
+                        member.getCreateDate(),
+                        member.getModifyDate(),
+                        member.getUsername(),
+                        "",
+                        member.getNickname(),
+                        member.getActivityScore()
+                )
+        );
 
-        if(isNew){
+        if (isNew) {
             eventPublisher.publish(
-                    new MarketMemberCreatedEvent(marketMember.toDto())
+                    new MarketMemberCreatedEvent(
+                            _member.toDto()
+                    )
             );
         }
 
-        return marketMember;
+        return _member;
     }
 }

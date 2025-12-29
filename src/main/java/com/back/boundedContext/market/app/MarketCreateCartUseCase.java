@@ -12,20 +12,20 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class MarketCreateCartUseCase {
-    private final CartRepository cartRepository;
     private final MarketMemberRepository marketMemberRepository;
+    private final CartRepository cartRepository;
 
-    public RsData<Cart> createCart(MarketMemberDto customer){
-        MarketMember marketMember = marketMemberRepository.getReferenceById(customer.getId());
+    public RsData<Cart> createCart(MarketMemberDto buyer) {
+        MarketMember _buyer = marketMemberRepository.getReferenceById(buyer.getId());
 
-        Cart cart = new Cart(marketMember);
+        Cart cart = new Cart(_buyer);
 
         cartRepository.save(cart);
 
         return new RsData<>(
                 "201-1",
-                "장바구니가 생성되었습니다."
-                ,cart
+                "장바구니가 생성되었습니다.",
+                cart
         );
     }
 }

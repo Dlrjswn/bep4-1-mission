@@ -19,6 +19,13 @@ public class CashMember extends ReplicaMember {
     }
 
     public CashMemberDto toDto() {
-        return new CashMemberDto(getId(),getCreateDate(),getModifyDate(),getUsername(),getNickname(),getActivityScore());
+        return new CashMemberDto(
+                getId(),
+                getCreateDate(),
+                getModifyDate(),
+                getUsername(),
+                getNickname(),
+                getActivityScore()
+        );
     }
 }

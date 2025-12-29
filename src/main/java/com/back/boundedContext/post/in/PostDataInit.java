@@ -35,7 +35,6 @@ public class PostDataInit {
         };
     }
 
-
     @Transactional
     public void makeBasePosts() {
         if (postFacade.count() > 0) return;

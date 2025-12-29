@@ -16,21 +16,23 @@ public class PostSupport {
     private final PostRepository postRepository;
     private final PostMemberRepository postMemberRepository;
 
-    public long count(){
+    public long count() {
         return postRepository.count();
     }
-    public Optional<Post> findById(int id){
+
+    public Optional<Post> findById(int id) {
         return postRepository.findById(id);
     }
-    public Optional<PostMember> findMemberByUsername(String username){
+
+    public Optional<PostMember> findMemberByUsername(String username) {
         return postMemberRepository.findByUsername(username);
+    }
+
+    public List<Post> findAll() {
+        return postRepository.findAll();
     }
 
     public List<Post> findByOrderByIdDesc() {
         return postRepository.findByOrderByIdDesc();
-    }
-
-    public List<Post> findAll(){
-        return postRepository.findAll();
     }
 }

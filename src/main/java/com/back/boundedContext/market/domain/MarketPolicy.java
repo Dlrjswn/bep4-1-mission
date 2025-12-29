@@ -8,7 +8,7 @@ public class MarketPolicy {
     public static double PRODUCT_PAYOUT_RATE;
 
     @Value("${custom.market.product.payoutRate}")
-    public void setProductPayoutRate(double productPayoutRate) {
-        PRODUCT_PAYOUT_RATE = productPayoutRate;
+    public void setProductPayoutRate(double rate) {
+        PRODUCT_PAYOUT_RATE = rate;
     }
 }

@@ -62,7 +62,7 @@ public class MarketDataInit {
 
         Product product1 = marketFacade.createProduct(
                 user1MarketMember,
-                "Post",
+                post1.getModelTypeCode(),
                 post1.getId(),
                 post1.getTitle(),
                 post1.getContent(),
@@ -72,7 +72,7 @@ public class MarketDataInit {
 
         Product product2 = marketFacade.createProduct(
                 user1MarketMember,
-                "Post",
+                post2.getModelTypeCode(),
                 post2.getId(),
                 post2.getTitle(),
                 post2.getContent(),
@@ -82,7 +82,7 @@ public class MarketDataInit {
 
         Product product3 = marketFacade.createProduct(
                 user1MarketMember,
-                "Post",
+                post3.getModelTypeCode(),
                 post3.getId(),
                 post3.getTitle(),
                 post3.getContent(),
@@ -92,7 +92,7 @@ public class MarketDataInit {
 
         Product product4 = marketFacade.createProduct(
                 user2MarketMember,
-                "Post",
+                post4.getModelTypeCode(),
                 post4.getId(),
                 post4.getTitle(),
                 post4.getContent(),
@@ -102,7 +102,7 @@ public class MarketDataInit {
 
         Product product5 = marketFacade.createProduct(
                 user2MarketMember,
-                "Post",
+                post5.getModelTypeCode(),
                 post5.getId(),
                 post5.getTitle(),
                 post5.getContent(),
@@ -112,7 +112,7 @@ public class MarketDataInit {
 
         Product product6 = marketFacade.createProduct(
                 user3MarketMember,
-                "Post",
+                post6.getModelTypeCode(),
                 post6.getId(),
                 post6.getTitle(),
                 post6.getContent(),
@@ -127,9 +127,9 @@ public class MarketDataInit {
         MarketMember user2Member = marketFacade.findMemberByUsername("user2").get();
         MarketMember user3Member = marketFacade.findMemberByUsername("user3").get();
 
-        Cart cart1 = marketFacade.findCartByCustomer(user1Member).get();
-        Cart cart2 = marketFacade.findCartByCustomer(user2Member).get();
-        Cart cart3 = marketFacade.findCartByCustomer(user3Member).get();
+        Cart cart1 = marketFacade.findCartByBuyer(user1Member).get();
+        Cart cart2 = marketFacade.findCartByBuyer(user2Member).get();
+        Cart cart3 = marketFacade.findCartByBuyer(user3Member).get();
 
         Product product1 = marketFacade.findProductById(1).get();
         Product product2 = marketFacade.findProductById(2).get();
@@ -157,22 +157,38 @@ public class MarketDataInit {
     public void makeBaseOrders() {
         if (marketFacade.ordersCount() > 0) return;
 
+        MarketMember user1Member = marketFacade.findMemberByUsername("user1").get();
         MarketMember user2Member = marketFacade.findMemberByUsername("user2").get();
         MarketMember user3Member = marketFacade.findMemberByUsername("user3").get();
 
-        Cart cart2 = marketFacade.findCartByCustomer(user2Member).get();
-        Cart cart3 = marketFacade.findCartByCustomer(user3Member).get();
+        Cart cart1 = marketFacade.findCartByBuyer(user1Member).get();
+        Cart cart2 = marketFacade.findCartByBuyer(user2Member).get();
+        Cart cart3 = marketFacade.findCartByBuyer(user3Member).get();
 
-        Order order1 = marketFacade.createOrder(cart2).getData();
-        Order order2 = marketFacade.createOrder(cart3).getData();
+        Order order1 = marketFacade.createOrder(cart1).getData();
+        Order order2 = marketFacade.createOrder(cart2).getData();
+        Order order3 = marketFacade.createOrder(cart3).getData();
+
+        // 주문 생성 때문에 cart1이 비어있기 때문에 다시 아이템 추가
+        Product product1 = marketFacade.findProductById(1).get();
+        Product product2 = marketFacade.findProductById(2).get();
+        Product product3 = marketFacade.findProductById(3).get();
+        Product product4 = marketFacade.findProductById(4).get();
+        Product product5 = marketFacade.findProductById(5).get();
+        Product product6 = marketFacade.findProductById(6).get();
+
+        cart1.addItem(product1);
+        cart1.addItem(product2);
+        cart1.addItem(product3);
+        cart1.addItem(product4);
     }
 
     @Transactional
-    public void makeBasePaidOrders(){
+    public void makeBasePaidOrders() {
         Order order1 = marketFacade.findOrderById(1).get();
 
-        if(order1.isPaid()) return;
+        if (order1.isPaid()) return;
 
-        marketFacade.requestPayment(order1,0);
+        marketFacade.requestPayment(order1, 0);
     }
 }

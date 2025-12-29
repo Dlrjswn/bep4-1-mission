@@ -14,26 +14,29 @@ import java.util.List;
 @Getter
 public class Cart extends BaseManualIdAndTime {
     @ManyToOne(fetch = FetchType.LAZY)
-    private MarketMember customer;
+    private MarketMember buyer;
 
-    @OneToMany(mappedBy = "cart", cascade = {CascadeType.PERSIST,CascadeType.REMOVE},orphanRemoval = true)
+    @OneToMany(mappedBy = "cart", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private List<CartItem> items = new ArrayList<>();
 
-    public Cart(MarketMember customer) {
-        super(customer.getId());
-        this.customer = customer;
+    private int itemsCount;
+
+    public Cart(MarketMember buyer) {
+        super(buyer.getId());
+        this.buyer = buyer;
     }
 
-    public boolean hasItems(){
-        return !this.getItems().isEmpty();
+    public boolean hasItems() {
+        return itemsCount > 0;
     }
 
-    public void addItem(Product product){
+    public void addItem(Product product) {
         CartItem cartItem = new CartItem(this, product);
         this.getItems().add(cartItem);
+        this.itemsCount++;
     }
 
-    public void clearItems(){
+    public void clearItems() {
         this.getItems().clear();
     }
 }

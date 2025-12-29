@@ -19,6 +19,13 @@ public class MarketMember extends ReplicaMember {
     }
 
     public MarketMemberDto toDto() {
-        return new MarketMemberDto(getId(),getCreateDate(),getModifyDate(),getUsername(),getNickname(),getActivityScore());
+        return new MarketMemberDto(
+                getId(),
+                getCreateDate(),
+                getModifyDate(),
+                getUsername(),
+                getNickname(),
+                getActivityScore()
+        );
     }
 }

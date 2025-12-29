@@ -12,7 +12,8 @@ public class CashApiClient {
 
     public CashApiClient(@Value("${custom.global.internalBackUrl}") String internalBackUrl) {
         this.restClient = RestClient.builder()
-                .baseUrl(internalBackUrl+"/api/v1/cash").build();
+                .baseUrl(internalBackUrl + "/api/v1/cash")
+                .build();
     }
 
     public WalletDto getItemByHolderId(int holderId) {
