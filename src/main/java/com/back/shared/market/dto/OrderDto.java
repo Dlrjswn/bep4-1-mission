@@ -9,31 +9,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 public class OrderDto {
-    private int id;
-    private LocalDateTime createDate;
-    private LocalDateTime modifyDate;
-    private int customerId;
-    private String customerName;
-    private int price;
-    private int salePrice;
-    private LocalDateTime requestPaymentDate;
-    private LocalDateTime paymentDate;
-    private LocalDateTime cancelDate;
-    private LocalDateTime refundDate;
+    private final int id;
+    private final LocalDateTime createDate;
+    private final LocalDateTime modifyDate;
+    private final int customerId;
+    private final String customerName;
+    private final int price;
+    private final int salePrice;
+    private final LocalDateTime requestPaymentDate;
+    private final LocalDateTime paymentDate;
 
-    public OrderDto(Order order) {
-        this(
-                order.getId(),
-                order.getCreateDate(),
-                order.getModifyDate(),
-                order.getCustomer().getId(),
-                order.getCustomer().getNickname(),
-                order.getPrice(),
-                order.getSalePrice(),
-                order.getRequestPaymentDate(),
-                order.getPaymentDate(),
-                order.getCancelDate(),
-                order.getRefundDate()
-        );
+
     }
-}
