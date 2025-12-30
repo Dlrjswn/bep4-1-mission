@@ -39,6 +39,8 @@ custom:
   member:
     password:
       changeDays: 90
+  payout:
+    readyWaitingDays: 14
   market:
     toss:
       payments:

@@ -57,7 +57,7 @@ public class PayoutCollectPayoutItemsMoreUseCase {
     private List<PayoutCandidateItem> findPayoutReadyCandidateItems(int limit) {
         LocalDateTime daysAgo = LocalDateTime
                 .now()
-                .minusDays(PayoutPolicy.getPayoutReadyWaitingDays())
+                .minusDays(PayoutPolicy.PAYOUT_READY_WAITING_DAYS)
                 .toLocalDate()
                 .atStartOfDay();
 
