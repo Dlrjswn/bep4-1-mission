@@ -54,6 +54,10 @@ public class PayoutCollectPayoutItemsMoreUseCase {
         );
     }
 
+    private Optional<Payout> findActiveByPayee(PayoutMember payee) {
+        return payoutRepository.findByPayeeAndPayoutDateIsNull(payee);
+    }
+
     private List<PayoutCandidateItem> findPayoutReadyCandidateItems(int limit) {
         LocalDateTime daysAgo = LocalDateTime
                 .now()
@@ -67,7 +71,4 @@ public class PayoutCollectPayoutItemsMoreUseCase {
         );
     }
 
-    private Optional<Payout> findActiveByPayee(PayoutMember payee) {
-        return payoutRepository.findByPayeeAndPayoutDateIsNull(payee);
-    }
 }
